@@ -1,0 +1,16 @@
+#Python cache files
+__pycache__/
+*.pyc
+
+#Virtual environnement
+.venv/
+
+#Database
+data_immo.db
+
+#Sensitive files
+*.log
+.env
+
+#Out of scope folder
+info/
