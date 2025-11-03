@@ -37,7 +37,6 @@ class Commune(Base):
       ForeignKey("departement.id_departement"))
   nom: Mapped[str] = mapped_column(String(50))
   code_commune: Mapped[int] = mapped_column(Integer)
-  code_postal: Mapped[str | None] = mapped_column(String(5))
   code_insee: Mapped[str] = mapped_column(String(6))
   #Relations
   departement: Mapped["Departement"] = relationship(back_populates="communes")
