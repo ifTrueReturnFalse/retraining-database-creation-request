@@ -12,5 +12,8 @@ data_immo.db
 *.log
 .env
 
+#Migrations files
+migrations/
+
 #Out of scope folder
 info/
