@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 
-def load_departement(engine: create_engine, df_geographic_ref: pd.DataFrame) -> pd.DataFrame:
+def load_departement(engine: create_engine, df_geographic_ref: pd.DataFrame):
   print("---- T/L Departement ----")
   try:
     # Transform
