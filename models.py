@@ -1,4 +1,4 @@
-from sqlalchemy import String, ForeignKey, Integer, BigInteger, Float, Date
+from sqlalchemy import String, ForeignKey, Integer, Float, Date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from typing import List
 from datetime import date
@@ -46,7 +46,7 @@ class Commune(Base):
 class Adresse(Base):
   #Declaration
   __tablename__ = "adresse"
-  id_adresse: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+  id_adresse: Mapped[int] = mapped_column(Integer, primary_key=True)
   id_commune: Mapped[int] = mapped_column(ForeignKey("commune.id_commune"))
   numero_voie: Mapped[int | None] = mapped_column(Integer)
   nom_voie: Mapped[str | None] = mapped_column(String(100))
@@ -70,7 +70,7 @@ class TypeVoie(Base):
 class Bien(Base):
   #Declaration
   __tablename__ = "bien"
-  id_bien: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+  id_bien: Mapped[int] = mapped_column(Integer, primary_key=True)
   id_adresse: Mapped[int] = mapped_column(ForeignKey("adresse.id_adresse"))
   btq: Mapped[str | None] = mapped_column(String(5))
   nombre_pieces: Mapped[int] = mapped_column(Integer)
@@ -85,7 +85,7 @@ class Bien(Base):
 class Vente(Base):
   #Declaration
   __tablename__ = "vente"
-  id_vente: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+  id_vente: Mapped[int] = mapped_column(Integer, primary_key=True)
   id_bien: Mapped[int] = mapped_column(ForeignKey("bien.id_bien"))
   date_vente: Mapped[date] = mapped_column(Date)
   valeur: Mapped[float] = mapped_column(Float)
