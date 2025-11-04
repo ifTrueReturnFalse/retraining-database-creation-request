@@ -77,6 +77,7 @@ class Bien(Base):
   surface_carrez: Mapped[float] = mapped_column(Float)
   surface_local: Mapped[int] = mapped_column(Integer)
   type_bien: Mapped[str] = mapped_column(String(20))
+  lot: Mapped[int] = mapped_column(Integer)
   #Relations
   adresse: Mapped["Adresse"] = relationship(back_populates="biens")
   ventes: Mapped[List["Vente"]] = relationship(back_populates="bien")

@@ -32,6 +32,10 @@ def load_commune(engine: create_engine, df_geographic_ref: pd.DataFrame) -> pd.D
       session.bulk_insert_mappings(models.Commune, commune_data)
       session.commit()
       print("Communes loaded successfully.")
+
+    df_commune = pd.read_sql(
+        select(models.Commune.id_commune, models.Commune.code_insee), engine)
+    return df_commune
   except Exception as error:
     print(f"ERROR (Commune) : {error}")
     raise
