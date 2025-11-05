@@ -38,6 +38,7 @@ class Commune(Base):
   nom: Mapped[str] = mapped_column(String(50))
   code_commune: Mapped[int] = mapped_column(Integer)
   code_insee: Mapped[str] = mapped_column(String(6))
+  population: Mapped[int] = mapped_column(Integer)
   #Relations
   departement: Mapped["Departement"] = relationship(back_populates="communes")
   adresses: Mapped[List["Adresse"]] = relationship(back_populates="commune")

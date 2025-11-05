@@ -47,9 +47,17 @@ try:
       "./source_data/Valeurs-foncieres.xlsx", dtype=estate_column_type)
   df_real_estate['B/T/Q'] = df_real_estate['B/T/Q'].fillna("")
 
+  print("Reading cities info...")
+  commune_info_type = {
+    "CODDEP": str,
+    "CODCOM": str,
+    "PTOT": int
+  }
+  df_commune_info = pd.read_excel("./source_data/donnees_communes.xlsx", dtype=commune_info_type)
+
   workers.load_region(engine, df_geographic_ref)
   workers.load_departement(engine, df_geographic_ref)
-  df_commune = workers.load_commune(engine, df_geographic_ref)
+  df_commune = workers.load_commune(engine, df_geographic_ref, df_commune_info)
   workers.load_type_voie(engine, df_real_estate)
   df_adresse = workers.load_adresse(engine, df_real_estate, df_commune)
   df_bien = workers.load_bien(engine, df_real_estate, df_adresse, df_commune)

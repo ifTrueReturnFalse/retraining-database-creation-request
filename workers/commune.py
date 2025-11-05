@@ -4,11 +4,13 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 
-def load_commune(engine: create_engine, df_geographic_ref: pd.DataFrame) -> pd.DataFrame:
+def load_commune(engine: create_engine, df_geographic_ref: pd.DataFrame, df_commune_info: pd.DataFrame) -> pd.DataFrame:
   print("---- T/L Commune ----")
   try:
     # Transform
     df_raw_commune = df_geographic_ref[["dep_code", "com_nom_maj", "com_code"]]
+    df_raw_commune_info = df_commune_info[["CODDEP", "CODCOM", "PTOT"]]
+    df_distinct_commune_info = df_raw_commune_info.drop_duplicates()
     df_commune_distinct = df_raw_commune.drop_duplicates()
     df_commune_distinct['code_commune'] = df_commune_distinct['com_code'].str[-3:]
 
@@ -18,12 +20,29 @@ def load_commune(engine: create_engine, df_geographic_ref: pd.DataFrame) -> pd.D
         "com_nom_maj": "nom",
         "com_code": "code_insee"
     })
+    df_commune_info_clean = df_distinct_commune_info.rename(columns={
+      "CODDEP": "id_departement",
+      "CODCOM": "code_commune",
+      "PTOT": "population"
+    })
+
     print(f"{len(df_commune_clean)} communes founded.")
 
     df_commune_clean['nom'] = normalize_commune(df_commune_clean['nom'])
+    df_commune_info_clean['code_insee'] = df_commune_info_clean['id_departement'] + df_commune_info_clean['code_commune']
+    df_commune_info_clean = df_commune_info_clean.drop(columns=["id_departement", "code_commune"])
+
+    df_commune_merged = pd.merge(
+      df_commune_clean,
+      df_commune_info_clean,
+      on=["code_insee"],
+      how="inner"
+    )
+
+    df_to_load = df_commune_merged[["id_departement", "nom", "code_commune", "code_insee", "population"]]
 
     # Prepare
-    commune_data = df_commune_clean.to_dict(orient="records")
+    commune_data = df_to_load.to_dict(orient="records")
     print(f"{len(commune_data)} to load.")
 
     # Load
