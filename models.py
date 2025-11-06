@@ -41,9 +41,9 @@ class Commune(Base):
   population: Mapped[int] = mapped_column(Integer)
   #Relations
   departement: Mapped["Departement"] = relationship(back_populates="communes")
-  adresses: Mapped[List["Adresse"]] = relationship(back_populates="commune")
+  biens: Mapped[List["Bien"]] = relationship(back_populates="commune")
 
-
+"""
 class Adresse(Base):
   #Declaration
   __tablename__ = "adresse"
@@ -66,13 +66,13 @@ class TypeVoie(Base):
   voie: Mapped[str] = mapped_column(String(5))
   #Relations
   adresses: Mapped[List["Adresse"]] = relationship(back_populates="type_voie")
-
+"""
 
 class Bien(Base):
   #Declaration
   __tablename__ = "bien"
   id_bien: Mapped[int] = mapped_column(Integer, primary_key=True)
-  id_adresse: Mapped[int] = mapped_column(ForeignKey("adresse.id_adresse"))
+  id_commune: Mapped[int] = mapped_column(ForeignKey("commune.id_commune"))
   btq: Mapped[str | None] = mapped_column(String(5))
   nombre_pieces: Mapped[int] = mapped_column(Integer)
   surface_carrez: Mapped[float] = mapped_column(Float)
@@ -80,7 +80,7 @@ class Bien(Base):
   type_bien: Mapped[str] = mapped_column(String(20))
   lot: Mapped[int] = mapped_column(Integer)
   #Relations
-  adresse: Mapped["Adresse"] = relationship(back_populates="biens")
+  commune: Mapped["Commune"] = relationship(back_populates="biens")
   ventes: Mapped[List["Vente"]] = relationship(back_populates="bien")
 
 

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 
-def load_bien(engine: create_engine, df_real_estate: pd.DataFrame, df_adresse: pd.DataFrame, df_commune: pd.DataFrame):
+def load_bien(engine: create_engine, df_real_estate: pd.DataFrame, df_commune: pd.DataFrame):
   print("---- T/L Bien ----")
   try:
     # Transform
@@ -29,21 +29,14 @@ def load_bien(engine: create_engine, df_real_estate: pd.DataFrame, df_adresse: p
 
     df_bien_clean['code_insee'] = df_bien_clean['id_departement'] + df_bien_clean ['code_commune']
 
-    df_adresse_commune = pd.merge(
-      df_adresse,
-      df_commune,
-      on="id_commune",
-      how="inner"
-    )
-
     print(f"{len(df_bien_clean)} biens founded.")
 
     df_bien_merged = pd.merge(
-        df_bien_clean, df_adresse_commune, 
-        on=["code_insee", "nom_voie", "id_voie", "numero_voie"], 
+        df_bien_clean, df_commune, 
+        on=["code_insee"], 
         how="inner")
 
-    df_bien_to_load = df_bien_merged[["id_adresse", "btq", "nombre_pieces", "surface_carrez", "surface_local", "type_bien", "lot"]]
+    df_bien_to_load = df_bien_merged[["id_commune", "btq", "nombre_pieces", "surface_carrez", "surface_local", "type_bien", "lot"]]
 
     # Prepare
     bien_data = df_bien_to_load.to_dict(orient="records")
