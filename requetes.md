@@ -84,23 +84,14 @@ WITH VentesParPieces AS (
   WHERE
     bien.type_bien = 'Appartement'
   GROUP BY bien.nombre_pieces
-),
-
-CalculTotal AS (
-  SELECT
-    nombre_pieces,
-    nombre_ventes,
-    SUM(nombre_ventes) OVER () AS total_ventes
-  FROM
-    VentesParPieces
 )
 
 SELECT
   nombre_pieces,
   nombre_ventes,
-  ROUND( (nombre_ventes * 100.0 / NULLIF(total_ventes, 0)), 3 ) AS proportion_pourcentage
+  ROUND( (nombre_ventes * 100.0 / NULLIF(SUM(nombre_ventes) OVER (), 0)), 3 ) AS proportion_pourcentage
 FROM
-  CalculTotal
+  VentesParPieces
 ORDER BY
   nombre_pieces
 ```
