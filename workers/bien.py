@@ -25,7 +25,9 @@ def load_bien(
                 "Code commune",
             ]
         ]
+
         df_bien_distinct = df_raw_bien.drop_duplicates()
+        print(f"{len(df_bien_clean)} biens founded.")
 
         df_bien_clean = df_bien_distinct.rename(
             columns={
@@ -43,18 +45,21 @@ def load_bien(
             }
         )
 
+        df_bien_clean = df_bien_clean[df_bien_clean["nombre_pieces"] > 0]
+
         df_bien_clean["code_insee"] = (
             df_bien_clean["id_departement"] + df_bien_clean["code_commune"]
         )
-
-        print(f"{len(df_bien_clean)} biens founded.")
 
         df_bien_merged = pd.merge(
             df_bien_clean, df_commune, on=["code_insee"], how="inner"
         )
 
+        df_bien_merged["id_bien"] = df_bien_merged.index + 1
+
         df_bien_to_load = df_bien_merged[
             [
+                "id_bien",
                 "id_commune",
                 "btq",
                 "nombre_pieces",
@@ -76,8 +81,7 @@ def load_bien(
             session.commit()
             print("Biens loaded successfully.")
 
-        df_bien = pd.read_sql(select(models.Bien), engine)
-        return df_bien
+        return df_bien_merged
 
     except Exception as error:
         print(f"ERROR (Bien) : {error}")

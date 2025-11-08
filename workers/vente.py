@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session
 def load_vente(
     engine: create_engine,
     df_real_estate: pd.DataFrame,
-    df_commune: pd.DataFrame,
     df_bien: pd.DataFrame,
 ):
     print("---- T/L Vente ----")
@@ -51,12 +50,10 @@ def load_vente(
 
         print(f"{len(df_vente_clean)} ventes founded.")
 
-        df_commune_bien = pd.merge(df_bien, df_commune, on="id_commune", how="inner")
-
         df_vente_merged = pd.merge(
             df_vente_clean,
-            df_commune_bien,
-            on=["code_insee", "lot", "surface_carrez", "type_bien"],
+            df_bien,
+            on=["code_insee", "numero_voie", "nom_voie", "lot", "id_voie"],
             how="inner",
         )
 
