@@ -12,8 +12,6 @@ print("Cleaning tables")
 with Session(engine) as session:
     session.execute(text(f"DELETE FROM {models.Vente.__tablename__}"))
     session.execute(text(f"DELETE FROM {models.Bien.__tablename__}"))
-    # session.execute(text(f"DELETE FROM {models.TypeVoie.__tablename__}"))
-    # session.execute(text(f"DELETE FROM {models.Adresse.__tablename__}"))
     session.execute(text(f"DELETE FROM {models.Commune.__tablename__}"))
     session.execute(text(f"DELETE FROM {models.Departement.__tablename__}"))
     session.execute(text(f"DELETE FROM {models.Region.__tablename__}"))
@@ -54,8 +52,6 @@ try:
     workers.load_region(engine, df_geographic_ref)
     workers.load_departement(engine, df_geographic_ref)
     df_commune = workers.load_commune(engine, df_geographic_ref, df_commune_info)
-    # workers.load_type_voie(engine, df_real_estate)
-    # df_adresse = workers.load_adresse(engine, df_real_estate, df_commune)
     df_bien = workers.load_bien(engine, df_real_estate, df_commune)
     workers.load_vente(engine, df_real_estate, df_bien)
 

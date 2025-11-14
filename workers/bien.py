@@ -1,6 +1,6 @@
 import models
 import pandas as pd
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 
@@ -27,7 +27,7 @@ def load_bien(
         ]
 
         df_bien_distinct = df_raw_bien.drop_duplicates()
-        print(f"{len(df_bien_clean)} biens founded.")
+        print(f"{len(df_bien_distinct)} biens founded.")
 
         df_bien_clean = df_bien_distinct.rename(
             columns={
@@ -66,7 +66,6 @@ def load_bien(
                 "surface_carrez",
                 "surface_local",
                 "type_bien",
-                "lot",
             ]
         ]
 

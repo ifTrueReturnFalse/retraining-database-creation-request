@@ -12,7 +12,8 @@ FROM
 INNER JOIN bien ON vente.id_bien = bien.id_bien
 WHERE
   bien.type_bien = 'Appartement' AND
-  vente.date_vente BETWEEN '2020-01-01' AND '2020-06-30'
+  strftime('%Y', vente.date_vente) = '2020' AND
+  strftime('%m', vente.date_vente) <= '06'
 ```
 
 _On peut théoriquement se passer de la condition sur les dates de vente car le jeu de données contient uniquement les ventes du premier semestre 2020._
@@ -40,7 +41,8 @@ INNER JOIN departement ON commune.id_departement = departement.id_departement
 INNER JOIN region ON departement.id_region = region.id_region
 WHERE
   bien.type_bien = 'Appartement' AND
-  vente.date_vente BETWEEN '2020-01-01' AND '2020-06-30'
+  strftime('%Y', vente.date_vente) = '2020' AND
+  strftime('%m', vente.date_vente) <= '06'
 GROUP BY region.nom
 ```
 
@@ -234,18 +236,19 @@ Résultat
 WITH VentesTrimestrielles AS (
   SELECT
     COUNT(CASE
-      WHEN vente.date_vente BETWEEN '2020-01-01' AND '2020-03-31'
+      WHEN strftime('%m', vente.date_vente) IN ('01', '02', '03') 
       THEN 1
     END) AS ventes_t1,
 
     COUNT(CASE
-      WHEN vente.date_vente BETWEEN '2020-04-01' AND '2020-06-30'
+      WHEN strftime('%m', vente.date_vente) IN ('04', '05', '06')
       THEN 1
     END) AS ventes_t2
     FROM
       vente
     WHERE
-      vente.date_vente BETWEEN '2020-01-01' AND '2020-06-30'
+      strftime('%Y', vente.date_vente) = '2020' AND
+      strftime('%m', vente.date_vente) <= '06'
 )
 
 SELECT
@@ -325,7 +328,8 @@ FROM
   vente
 INNER JOIN bien ON vente.id_bien = bien.id_bien
 INNER JOIN commune ON bien.id_commune = commune.id_commune
-WHERE vente.date_vente BETWEEN "2020-01-01" AND "2020-03-31"
+WHERE 
+  strftime('%m', vente.date_vente) IN ('01', '02', '03')
 GROUP BY commune.id_commune, commune.nom
 HAVING nombre_ventes >= 50
 ```
@@ -576,7 +580,7 @@ Résultat
 |Rhône|	LYON 9E  ARRONDISSEMENT|	227282.6|	2|
 |Rhône|	LYON 3E  ARRONDISSEMENT|	347104.21|	3|
 
-#### Top 3 des| communes par population
+#### Top 3 des communes par population
 
 ```sql
 WITH FoncierMoyenCommune AS (
